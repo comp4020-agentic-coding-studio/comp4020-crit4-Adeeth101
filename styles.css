@@ -1,16 +1,500 @@
+/* Substep — a drum & bass machine. Dark, because the grid has to glow. */
+
+:root {
+  --bg: #07080c;
+  --bg-lift: #0d0f17;
+  --panel: rgba(255, 255, 255, 0.026);
+  --line: rgba(255, 255, 255, 0.085);
+  --line-strong: rgba(255, 255, 255, 0.17);
+  --ink: #e9edf7;
+  --dim: #7b849b;
+  --accent: #b8ff3c;
+  --scope-line: #7cf6d2;
+  --radius: 10px;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
-  padding: 2rem;
-  font-family: system-ui, sans-serif;
-  line-height: 1.6;
-  color: #1a1a1a;
+  min-height: 100dvh;
+  padding: 0 clamp(0.75rem, 3vw, 2rem) 3rem;
+  background:
+    radial-gradient(120% 80% at 50% -10%, #14182a 0%, transparent 60%),
+    radial-gradient(90% 60% at 92% 8%, rgba(184, 255, 60, 0.07) 0%, transparent 55%),
+    var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-main {
-  max-width: 40rem;
+:where(button, input, a):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* --- chrome --------------------------------------------------------------- */
+
+.topbar nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 70rem;
   margin: 0 auto;
+  padding: 1rem 0 0.25rem;
 }
 
-a {
-  color: #0b5fff;
+.wordmark {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.source {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+
+.source:hover {
+  color: var(--accent);
+}
+
+.instrument {
+  max-width: 70rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 2.2vw, 1.4rem);
+}
+
+.masthead {
+  padding-top: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 9vw, 4.2rem);
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+  font-weight: 800;
+  background: linear-gradient(96deg, var(--ink) 18%, var(--accent) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline {
+  margin: 0.5rem 0 0;
+  max-width: 34rem;
+  color: var(--dim);
+  font-size: 0.95rem;
+}
+
+/* --- scope ---------------------------------------------------------------- */
+
+.scope {
+  display: block;
+  width: 100%;
+  height: clamp(52px, 9vw, 76px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(124, 246, 210, 0.05), transparent 70%), #05060a;
+}
+
+/* --- the invitation ------------------------------------------------------- */
+
+.hint {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--dim);
+  transition:
+    opacity 500ms ease,
+    transform 500ms ease;
+}
+
+.hint strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.hint[data-dismissed="true"] {
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.5rem;
+  margin: 0 0.1rem;
+  padding: 0.05rem 0.3rem;
+  border: 1px solid var(--line-strong);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--bg-lift);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  text-align: center;
+}
+
+/* --- panels --------------------------------------------------------------- */
+
+.panel {
+  padding: clamp(0.7rem, 2vw, 1.1rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.panel h2 {
+  margin: 0 0 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* --- sequencer ------------------------------------------------------------ */
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3px, 0.7vw, 6px);
+}
+
+.lane {
+  display: grid;
+  grid-template-columns: minmax(2.5rem, 3.4rem) 1fr;
+  align-items: center;
+  gap: clamp(4px, 1vw, 10px);
+}
+
+.lane-name {
+  padding: 0.3rem 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: clamp(0.6rem, 1.6vw, 0.7rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+  transition: color 140ms ease;
+}
+
+.lane-name:hover,
+.lane-name:active {
+  color: hsl(var(--hue) 95% 66%);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  gap: clamp(2px, 0.55vw, 5px);
+}
+
+.step {
+  aspect-ratio: 1;
+  min-height: 15px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.014);
+  cursor: pointer;
+  /* Painting across cells needs the drag; the page still scrolls elsewhere. */
+  touch-action: none;
+  transition:
+    background-color 90ms ease,
+    border-color 90ms ease;
+}
+
+/* Every fourth step starts a beat, so the bar is readable at a glance. */
+.step[data-beat="true"] {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.step[data-playing="true"] {
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.step[aria-pressed="true"] {
+  border-color: hsl(var(--hue) 90% 60%);
+  background: hsl(var(--hue) 88% 55%);
+  box-shadow: 0 0 10px -1px hsl(var(--hue) 90% 55% / 0.6);
+}
+
+.step[aria-pressed="true"][data-playing="true"] {
+  background: hsl(var(--hue) 100% 74%);
+}
+
+.step[data-hit="true"] {
+  animation: hit 240ms ease-out;
+}
+
+@keyframes hit {
+  from {
+    transform: scale(1.3);
+    filter: brightness(2.4);
+  }
+  to {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* --- pads ----------------------------------------------------------------- */
+
+.pads {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(52px, 9vw, 92px), 1fr));
+  gap: clamp(4px, 1vw, 8px);
+}
+
+.pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: clamp(58px, 11vw, 84px);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012));
+  color: var(--ink);
+  cursor: pointer;
+  touch-action: none;
+  transition:
+    background-color 80ms ease,
+    transform 80ms ease,
+    box-shadow 120ms ease;
+}
+
+.pad:hover {
+  border-color: rgba(184, 255, 60, 0.4);
+}
+
+.pad[data-held="true"] {
+  transform: translateY(2px);
+  border-color: var(--accent);
+  background: linear-gradient(180deg, rgba(184, 255, 60, 0.42), rgba(184, 255, 60, 0.14));
+  box-shadow: 0 0 22px -4px rgba(184, 255, 60, 0.75);
+}
+
+.pad-key {
+  font-family: var(--mono);
+  font-size: clamp(0.95rem, 2.4vw, 1.2rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.pad-note {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+}
+
+.pad[data-held="true"] .pad-key,
+.pad[data-held="true"] .pad-note {
+  color: #07080c;
+}
+
+/* --- controls ------------------------------------------------------------- */
+
+.transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.key-action,
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.05rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.action:hover {
+  border-color: rgba(184, 255, 60, 0.5);
+  color: var(--accent);
+}
+
+.key-action {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #07080c;
+  font-weight: 700;
+}
+
+.key-action:hover {
+  background: #cbff6d;
+  border-color: #cbff6d;
+}
+
+/* A triangle when stopped, two bars when running — the button says what it
+   will do next, which is the way round a transport control has to read. */
+.key-action .glyph {
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 10px solid currentColor;
+}
+
+.key-action[aria-pressed="true"] .glyph {
+  width: 10px;
+  height: 12px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    currentColor 0 3.5px,
+    transparent 3.5px 6.5px,
+    currentColor 6.5px
+  );
+}
+
+.dials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.85rem clamp(0.9rem, 2.5vw, 1.6rem);
+}
+
+.dial {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.15rem 0.6rem;
+  margin: 0;
+}
+
+.dial-wide {
+  grid-column: span 2;
+}
+
+.dial label,
+.dial output {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.dial label {
+  color: var(--dim);
+}
+
+.dial output {
+  color: var(--accent);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.dial input {
+  grid-column: 1 / -1;
+}
+
+/* The filter is the control the instrument is really about, so it gets the
+   double-width slot and a brighter label. */
+.dial-wide label {
+  color: var(--ink);
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px -2px rgba(184, 255, 60, 0.9);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px -2px rgba(184, 255, 60, 0.9);
+}
+
+@media (max-width: 30rem) {
+  .dial-wide {
+    grid-column: span 1;
+  }
+
+  .lane {
+    grid-template-columns: 2.3rem 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

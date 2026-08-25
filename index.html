@@ -3,17 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>COMP4020 prototype</title>
+    <title>Substep — a drum &amp; bass machine that runs in the page</title>
     <meta
       name="description"
-      content="Replace this with one sentence saying what this page is. A search result and a link preview both show it."
+      content="A 16-step drum machine and a monophonic reese bass, synthesised live in the browser with the Web Audio API. Paint a beat, hold the pads, turn the filter up. No audio files, no wrong notes."
     />
+    <meta name="theme-color" content="#07080c" />
 
-    <!--
-      The link-preview card: public/card.png, 1200x630 --- replace it. The URL
-      resolves against this page, like any link. No og:title/og:description:
-      scrapers fall back to the <title> and description above.
-    -->
     <meta property="og:type" content="website" />
     <meta property="og:image" content="./card.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -21,18 +17,89 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <header>
+    <header class="topbar">
       <nav aria-label="Primary">
-        <a href="./">Home</a>
+        <span class="wordmark">Substep</span>
+        <a
+          class="source"
+          href="https://github.com/comp4020-agentic-coding-studio/comp4020-crit4-Adeeth101"
+          >source</a
+        >
       </nav>
     </header>
-    <main>
-      <h1>COMP4020 prototype</h1>
-      <p data-testid="intro">
-        Replace this with your prototype. This week's brief is on the course website;
-        <code>spec/README.md</code> explains how the checks in this repo relate to it.
+
+    <main class="instrument">
+      <div class="masthead">
+        <h1>Substep</h1>
+        <p class="tagline">
+          Everything you hear is made in this page, one note at a time.
+        </p>
+      </div>
+
+      <canvas class="scope" data-testid="scope" aria-hidden="true"></canvas>
+
+      <p class="hint" data-testid="hint">
+        <strong>Touch the grid.</strong> Or press
+        <kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd> for bass.
       </p>
+
+      <section class="panel" aria-labelledby="drums-heading">
+        <h2 id="drums-heading">Drums</h2>
+        <div class="grid" data-testid="grid" role="group" aria-label="Step sequencer"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="bass-heading">
+        <h2 id="bass-heading">Bass</h2>
+        <div class="pads" data-testid="pads" role="group" aria-label="Bass pads"></div>
+      </section>
+
+      <section class="panel controls" aria-labelledby="controls-heading">
+        <h2 id="controls-heading">Controls</h2>
+
+        <div class="transport">
+          <button type="button" class="key-action" data-testid="play" aria-pressed="false">
+            <span class="glyph" aria-hidden="true"></span>
+            <span class="key-action-label">Play</span>
+          </button>
+          <button type="button" class="action" data-testid="roll">Roll a beat</button>
+          <button type="button" class="action" data-testid="clear">Clear</button>
+        </div>
+
+        <div class="dials">
+          <p class="dial">
+            <label for="tempo">Tempo</label>
+            <input id="tempo" type="range" min="150" max="180" step="1" value="174" />
+            <output for="tempo" data-testid="tempo-value">174 bpm</output>
+          </p>
+          <p class="dial">
+            <label for="swing">Swing</label>
+            <input id="swing" type="range" min="0" max="100" step="1" value="18" />
+            <output for="swing">18%</output>
+          </p>
+          <p class="dial dial-wide">
+            <label for="cutoff">Filter</label>
+            <input id="cutoff" type="range" min="0" max="100" step="1" value="42" />
+            <output for="cutoff">42%</output>
+          </p>
+          <p class="dial">
+            <label for="reese">Reese</label>
+            <input id="reese" type="range" min="0" max="100" step="1" value="50" />
+            <output for="reese">50%</output>
+          </p>
+          <p class="dial">
+            <label for="drive">Drive</label>
+            <input id="drive" type="range" min="0" max="100" step="1" value="30" />
+            <output for="drive">30%</output>
+          </p>
+          <p class="dial">
+            <label for="glide">Glide</label>
+            <input id="glide" type="range" min="0" max="100" step="1" value="18" />
+            <output for="glide">18%</output>
+          </p>
+        </div>
+      </section>
     </main>
+
     <script type="module" src="./main.ts"></script>
   </body>
 </html>
