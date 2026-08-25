@@ -1,13 +1,62 @@
-# COMP4020 prototype
+# COMP4020 Crit 4 — "An Instrument"
 
-Your starter repo for a COMP4020 prototype: a static site in HTML/CSS/TypeScript
-that builds to plain HTML/CSS/JS and deploys to GitHub Pages. The deployed site
-is what gets marked, not this repo.
+Your starter repo for **Crit 4, week 5: An instrument**. A static site in
+HTML/CSS/TypeScript that builds to plain HTML/CSS/JS and deploys to GitHub
+Pages. The deployed site is what gets marked, not this repo.
 
-The
-[course website](https://comp.anu.edu.au/courses/comp4020-agentic-coding-studio/)
-publishes this deliverable's brief and spec, and this repo's name tells you
-which deliverable applies. Read both before you plan or build.
+Cutoff for the baishi crit group: **Wed 2026-08-26, 07:00 Canberra time**
+(2 hours before the 09:00–10:30 tutorial, Marie Reay 155 room 4.03, tutor
+Tom Griffiths). Verified live against the course site on 2026-08-25.
+
+## What we're building
+
+A browser-based **drum-and-bass instrument**: an 808-style step sequencer
+driving a small drum kit (kick, snare/clap, hi-hats, maybe a ride/perc) at a
+DnB tempo (~160–175 BPM, breakbeat-ish swing), paired with a simple
+monophonic sub/reese-style synth voice the player can play live over the top
+(a small on-screen keyboard or pad row is enough — no piano-roll needed).
+Everything is generated live in the browser with the Web Audio API; nothing
+is a pre-rendered audio file played back.
+
+Keep the scope small and playable rather than feature-complete:
+- a step sequencer grid (e.g. 16 steps × a handful of drum lanes) the player
+  can toggle to build their own beat, looping continuously
+- a couple of drum voices synthesised (or sampled short one-shots) covering
+  kick/snare/hats at minimum
+- one synth voice (sub bass / reese-ish) playable via keys, on-screen pads,
+  or clicks, with at least one control that shapes its tone (filter cutoff,
+  envelope, distortion — pick one and make it obviously audible)
+- basic global tempo/swing control is a bonus, not a requirement
+
+## The rubric (Crit 4 spec — every clause must hold)
+
+1. deployed and live at its public GitHub Pages URL by the cutoff
+2. the browser *is* the instrument — sound is made live in the page by the
+   player, not played back from pre-rendered audio
+3. it is expressive: the player's choices shape what they hear, and two
+   players sound different
+4. a stranger can play it uninstructed — the opening screen invites the
+   first sound (no "click play" wall of instructions)
+5. playable with whatever is at hand — mouse, keyboard, or touch all work
+6. there is no way to play it wrong — no score, no fail state, nothing to
+   "lose"
+7. the starter's invariant checks pass (`pnpm check`)
+8. the repo shows the process — commits that grew with the work, a process
+   overview in `PROCESS.md`, and the week's reflection in
+   `reflections/crit-4.md`
+9. you can account for how you directed, grounded and corrected the work
+
+Premise from the course site: *"Judgement week: an agent can build a synth
+but can't hear the result, so your ear is the harness."* — meaning the agent
+can wire up oscillators and sequencers, but only you, listening, can judge
+whether it actually sounds and feels right. Playtest by ear constantly, not
+just by reading the code.
+
+The full course site (including this page's live version) is at
+[the course website](https://comp.anu.edu.au/courses/comp4020-agentic-coding-studio/crits/04-instrument/);
+a structured snapshot ingested 2026-08-25 also lives in
+`../course-site/README.md` and `../course-site/api/index.json` in the parent
+folder, if the live site is unreachable.
 
 ## How to work in here
 
